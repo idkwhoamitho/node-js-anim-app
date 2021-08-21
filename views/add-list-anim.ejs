@@ -1,0 +1,25 @@
+<form method="POST" action="/Anime">
+  <% if (typeof errors !== 'undefined') { %>
+    <% errors.forEach(error => { %>
+      <div class="alert alert-danger" role="alert">
+        <%= error.msg %> 
+      </div>
+    <% }) %>
+  <% }else{ %>   
+    <div class="mb-3">
+        <label for="title" class="form-label"> judul Anime</label>
+        <input type="text" class="form-control" id="title" name="title" required>
+      </div>
+      <div class="mb-3">
+        <label for="realese" class="form-label">tanggal rilis</label>
+        <input type="text" class="form-control" id="realese" name="realese" required>
+      </div>
+      <div class="mb-3">
+        <label for="mangaka" class="form-label" name="mangaka">pengarang</label>
+        <input type="text" class="form-control" id="mangaka" required>
+        
+        <button type="submit" class="btn btn-primary" value="upload">tambah anime</button>
+      </div>
+      <input type="file" name="sampulAnim">upload foto
+    <% } %> 
+  </form>

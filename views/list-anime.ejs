@@ -1,0 +1,24 @@
+<a href="/Anime/update" class="btn btn-info">tambah anime</a>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+<div class="card" style="width: 18rem;">
+  <% if (loadAnim.length === 0) { %>
+    <div class="alert alert-warning d-flex align-items-center" role="alert">
+      <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+      <i class="bi bi-exclamation-diamond"></i>
+      <div>
+        Anime Not Found :(
+      </div>
+    </div>
+  <% } else { %>  
+  <% loadAnim.forEach(Anime => { %>
+        <div class="card-body mt-5">
+          <h5 class="card-title"><%= Anime.title %> </h5>
+          <h6 class="card-subtitle mb-2 text-muted"><%= Anime.realese %></h6>
+          <p class="card-text"><%= Anime.mangaka %> </p>
+          <a href="/anime/detail/<%= Anime.title %>" class="card-link">detail</a>
+          <a href="#" class="card-link">&laquo;back to home</a>
+        </div>
+      
+      <% }) %>
+    <% } %> 
+  </div>
