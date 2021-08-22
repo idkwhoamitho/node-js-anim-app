@@ -53,6 +53,29 @@ app.get('/Anime/update',(req,res) => {
   })
 })
 
+
+
+app.post('/anime/Upload',(req,res,next) => {
+  const form = new formidable.IncomingForm();
+  form.parse(req,(error,fields,files) => {
+    const oldPath = files.sampulAnim.path;
+    const newPath = './uploads' + files.sampulAnim.name;
+    mv(oldPath,newPath,(Err) => {
+      if(Err) throw Err;
+      res.send('ok')
+    })
+  })
+})
+
+app.get("/anime/Upload",(req,res) => {
+  res.render('add-foto',{
+    title: 'form tambah foto',
+    layout: 'layouts/main-layouts'
+  })
+})
+
+
+
 app.post('/Anime',[
   check('realese').custom(value => {
     const tahun = utils.checkYear(value);
@@ -77,15 +100,10 @@ app.post('/Anime',[
 })
 
 
-
-
-
 app.use('/',(req,res) => {
   res.sendStatus(404);
   res.send('<h1>404</h1>');
 })
-
-
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
