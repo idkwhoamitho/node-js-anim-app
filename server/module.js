@@ -42,7 +42,12 @@ const addAnim = (anim) => {
     anims.push(anim);
    saveAnim(anims);
 }
+//hapus anim
+const deleteAnim = (title) => {
+    const Anims = loadAnimeList();
+    const filteredAnims = Anims.filter(Anim => Anim.title !== title);
+    saveAnim(filteredAnims);
+}
 
 
-
-module.exports = {loadAnimeList,findAnime,checkYear,addAnim}
+module.exports = {loadAnimeList,findAnime,checkYear,addAnim,deleteAnim}

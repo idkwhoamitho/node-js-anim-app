@@ -8,6 +8,7 @@ const mv = require('mv');
 const formidable = require('formidable');
 const { urlencoded } = require('body-parser');
 const fs = require('fs');
+const { nextTick } = require('process');
 const port = 3000
 
 app.set('view engine','ejs');
@@ -40,6 +41,11 @@ app.get('/anime/detail/:nama',(req,res) => {
   })
 })
 
+app.get('/Anime/Delete/:nama',(req,res) => {
+  const Anim = utils.deleteAnim(req.params.nama);
+  res.redirect('/anime');
+})
+
 app.get('/Anime/update',(req,res) => {
   res.render('add-list-anim',{
     title: 'form tambah',
@@ -65,14 +71,11 @@ app.post('/Anime',[
     })
   }
   else{
-    // utils.addAnim(req.body);
-    // res.redirect('/anime');
+    utils.addAnim(req.body);
+    res.redirect('/anime');
   }
 })
 
-app.post('/Anime',(req,res) => {
-  
-})
 
 
 
