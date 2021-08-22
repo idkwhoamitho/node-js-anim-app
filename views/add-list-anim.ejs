@@ -1,4 +1,4 @@
-<form method="POST" action="/Anime">
+<form method="POST" action="/Anime" enctype="multipart/form-data">
   <% if (typeof errors !== 'undefined') { %>
     <% errors.forEach(error => { %>
       <div class="alert alert-danger" role="alert">
@@ -19,6 +19,9 @@
         <input type="text" class="form-control" id="mangaka" required>
         
         <button type="submit" class="btn btn-primary" value="upload">tambah anime</button>
+      </div>
+      <div class="mb-3">
+        <input type="file" name="sampulAnim"> upload foto
       </div>
       <% } %> 
     </form>

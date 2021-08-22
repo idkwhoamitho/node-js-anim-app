@@ -48,6 +48,14 @@ const deleteAnim = (title) => {
     const filteredAnims = Anims.filter(Anim => Anim.title !== title);
     saveAnim(filteredAnims);
 }
+const addFoto = (title,fileFoto) => {
+    const Anims = loadAnimeList();
+    const filteredAnims = Anims.find(anime => anime.title === title);
+    filteredAnims.fotoAnims = fileFoto
+    console.log(filteredAnims);
+}
 
 
-module.exports = {loadAnimeList,findAnime,checkYear,addAnim,deleteAnim}
+
+
+module.exports = {loadAnimeList,findAnime,checkYear,addAnim,deleteAnim,addFoto}
