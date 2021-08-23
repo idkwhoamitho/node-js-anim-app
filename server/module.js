@@ -37,8 +37,9 @@ const saveAnim = (title)=> {
     fs.writeFileSync('data/list.json',JSON.stringify(title));
 }
 
-const addAnim = (anim) => {
+const addAnim = (anim,picPath) => {
     const anims = loadAnimeList();
+    anim.picture = picPath
     anims.push(anim);
    saveAnim(anims);
 }

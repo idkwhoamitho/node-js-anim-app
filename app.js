@@ -64,30 +64,29 @@ app.post('/Anime',[
     } 
     return true;
   })
-],(req,res) => {
-  const errors = validationResult(req);
-  if(!errors.isEmpty()){
-    res.render('add-list-anim',{
-      title: 'form tambah',
-      layout: 'layouts/main-layouts',
-      errors: errors.array(),
-    })
-  }
-  else{
-    utils.addAnim(req.body);
-    
+],(req,res,next) => {  
     const form = new formidable.IncomingForm();
-    form.parse(req,(error,fields,files) => {
+
+    const errors = validationResult(req);
+   
+    return form.parse(req,(error,fields,files) => {
       const oldPath = files.sampulAnim.path;
       const newPath = './uploads/' + files.sampulAnim.name;
-      mv(oldPath,newPath,(Err) => {
-        if(Err) throw Err;
-         utils.addFoto(req.params.nama,newPath);
-         return res.redirect('/anime');
+      if(!errors.isEmpty()){
+        res.render('add-list-anim',{
+          title: 'form tambah',
+          layout: 'layouts/main-layouts',
+          errors: errors.array(),
+        })
+      }
+      else{
+        utils.addAnim(fields,newPath);
+        return  res.redirect('/anime');
+      }
+      return mv(oldPath,newPath,(Err) => {
+        if( Err) throw Err;
       })
     })
-    res.redirect('/anime');
-  }
 })
 
 
