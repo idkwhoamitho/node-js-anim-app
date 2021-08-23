@@ -14,6 +14,7 @@ const port = 3000
 app.set('view engine','ejs');
 app.use(expressLayouts());
 app.use(express.urlencoded({extended:true,limit:"20mb"}));
+app.use(express.static('public'));
 
 app.get('/', (req, res) => {
   res.render('index',{
@@ -24,7 +25,7 @@ app.get('/', (req, res) => {
 
 app.get('/anime',(req,res) => {
   const loadAnim = utils.loadAnimeList();
-  res.render('list-anime',{
+  return res.render('list-anime',{
     title: 'list anime',
     layout: 'layouts/main-layouts',
     loadAnim
@@ -33,8 +34,7 @@ app.get('/anime',(req,res) => {
 
 app.get('/anime/detail/:nama',(req,res) => {
   const Anim = utils.findAnime(req.params.nama);
-  console.log(Anim.title);
-  res.render('detail',{
+  return res.render('detail',{
     title: 'list anime',
     layout: 'layouts/main-layouts',
     Anim
@@ -71,7 +71,7 @@ app.post('/Anime',[
    
     return form.parse(req,(error,fields,files) => {
       const oldPath = files.sampulAnim.path;
-      const newPath = './uploads/' + files.sampulAnim.name;
+      const newPath = 'public/uploads/' + files.sampulAnim.name;
       if(!errors.isEmpty()){
         res.render('add-list-anim',{
           title: 'form tambah',
@@ -81,7 +81,7 @@ app.post('/Anime',[
       }
       else{
         utils.addAnim(fields,newPath);
-        return  res.redirect('/anime');
+        return res.redirect('/anime');
       }
       return mv(oldPath,newPath,(Err) => {
         if( Err) throw Err;

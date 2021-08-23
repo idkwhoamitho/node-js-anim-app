@@ -11,14 +11,15 @@
     </div>
   <% } else { %>  
   <% loadAnim.forEach(Anime => { %>
-        <div class="card-body mt-5">
-          <h5 class="card-title"><%= Anime.title %> </h5>
-          <h6 class="card-subtitle mb-2 text-muted"><%= Anime.realese %></h6>
-          <p class="card-text"><%= Anime.mangaka %> </p>
-          <a href="/anime/detail/<%= Anime.title %>" class="card-link">detail</a>
-          <a href="#" class="card-link">&laquo;back to home</a>
-        </div>
-      
+    <div class="card" style="width: 18rem;">
+      <img src="<%= Anime.picture %>" class="card-img-top" alt="<%= Anime.title %>">
+      <div class="card-body">
+        <h5 class="card-title"><%= Anime.title %> </h5>
+        <h6 class="card-subtitle mb-2 text-muted"><%= Anime.realese %> </h6>
+        <p class="card-text"><%= Anime.mangaka %> </p>
+        <a href="/anime/detail/<%= Anime.title %> " class="btn btn-primary">detail</a>
+      </div>
+    </div>
       <% }) %>
     <% } %> 
   </div>
