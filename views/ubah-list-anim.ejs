@@ -1,0 +1,29 @@
+<form method="POST" action="/Anime/Ubah" enctype="multipart/form-data">
+  <% if (typeof errors !== 'undefined') { %>
+    <% errors.forEach(error => { %>
+      <div class="alert alert-danger" role="alert">
+        <%= error.msg %> 
+      </div>
+    <% }) %>
+  <% }else{ %>   
+    <div class="mb-3">
+      <input type="hidden" name="oldNama" value="<%= Anim.title %>">
+      <input type="hidden" name="oldYear" value="<%= Anim.realese %>">
+      <label for="title" class="form-label"> judul Anime</label>
+        <input type="text" class="form-control" id="title" name="title" value="<%= Anim.title %>" required>
+      </div>
+      <div class="mb-3">
+        <label for="realese" class="form-label">tanggal rilis</label>
+        <input type="text" class="form-control" id="realese" name="realese" value="<%= Anim.realese %>" required>
+      </div>
+      <div class="mb-3">
+        <label for="mangaka" class="form-label" >pengarang</label>
+        <input type="text" class="form-control" id="mangaka" name="mangaka" value="<%= Anim.mangaka %>" required>
+        
+        <button type="submit" class="btn btn-primary" value="upload">ubah anime</button>
+      </div>
+      <div class="mb-3">
+        <input type="file" name="sampulAnim" value="<%= Anim.picture %>" > upload foto
+      </div>
+      <% } %> 
+    </form>

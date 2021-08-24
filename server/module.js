@@ -28,9 +28,9 @@ const findAnime = (titleAnime) => {
 //check tahun
 const checkYear = (year) => {
     if(year < 1000){
-        return false;
+        return true;
     }
-    return true;
+    return false;
 }
 //save anim
 const saveAnim = (title)=> {
@@ -46,12 +46,26 @@ const addAnim = (anim,picPath) => {
 //hapus anim
 const deleteAnim = (title) => {
     const Anims = loadAnimeList();
+    const hapusFoto = Anims.find(Anim => Anim.title === title);
+    fs.rmSync('./public/' + hapusFoto.picture);
     const filteredAnims = Anims.filter(Anim => Anim.title !== title);
+    saveAnim(filteredAnims);
+}
+//edit anim data 
+const editAnim = (dataAnim,fotoPath) => {
+    const Anims = loadAnimeList();
+    const filteredAnims = Anims.filter(anim => dataAnim.title !== anim.title);
+    if(dataAnim.picture === undefined){
+        fs.rmSync('./public/' + dataAnim.picture);
+    }
+    dataAnim.picture = fotoPath;
+    delete dataAnim.oldNama;
+    delete dataAnim.oldYear;
+    filteredAnims.push(dataAnim);
     saveAnim(filteredAnims);
 }
 
 
 
 
-
-module.exports = {loadAnimeList,findAnime,checkYear,addAnim,deleteAnim}
+module.exports = {loadAnimeList,findAnime,checkYear,addAnim,deleteAnim,editAnim}

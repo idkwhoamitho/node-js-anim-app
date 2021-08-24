@@ -7,7 +7,6 @@ const mv = require('mv');
 const morgan = require('morgan');
 const formidable = require('formidable');
 const { urlencoded } = require('body-parser');
-const fs = require('fs');
 const port = 3000
 
 app.use(express.static('public')) ;
@@ -32,10 +31,58 @@ app.get('/anime',(req,res,next) => {
   })
 })
 
+app.get('/Anime/Ubah/:nama',(req,res) => {
+  const Anim = utils.findAnime(req.params.nama);
+  res.render('ubah-list-anim',{
+    title: 'form ubah data ',
+    layout: 'layouts/main-layouts',
+    Anim
+  })
+})
+
+app.post('/Anime/Ubah',[
+  check('realese').custom((value,{ req }) => {
+    const tahun = utils.checkYear(value);
+    if (tahun && value !== req.body.oldYear){
+      throw new Error('tahun tidak valid');
+    } 
+    return true;
+  })
+],(req,res) => {  
+    const form = new formidable.IncomingForm();
+
+    const errors = validationResult(req);
+   
+    return form.parse(req,(error,fields,files) => {
+      const oldPath = files.sampulAnim.path;
+      const newPath = '/public/uploads/' + files.sampulAnim.name;
+      if(!errors.isEmpty()){
+         res.render('ubah-list-anim',{
+          title: 'form tambah',
+          layout: 'layouts/main-layouts',
+          errors: errors.array(),
+          Anim : fields
+        })
+        
+      }
+      else{
+        // res.send({fields,files});
+        mv(oldPath ,'./public' + newPath,(Err) => {
+          if(Err) throw Err;
+          utils.editAnim(fields,newPath);  
+          res.redirect('/anime')
+        })
+      }
+    })
+})
+
+
+
+
 app.post('/Anime',[
   check('realese').custom(value => {
     const tahun = utils.checkYear(value);
-    if (!tahun){
+    if (tahun){
       throw new Error('tahun tidak valid');
     } 
     return true;
