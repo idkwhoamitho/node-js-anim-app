@@ -4,17 +4,17 @@ const expressLayouts = require('express-layout');
 const {body,validationResult,check} = require('express-validator');
 const utils = require('./server/module');
 const mv = require('mv');
-
+const morgan = require('morgan');
 const formidable = require('formidable');
 const { urlencoded } = require('body-parser');
 const fs = require('fs');
-const { nextTick } = require('process');
 const port = 3000
 
+app.use(express.static('public')) ;
 app.set('view engine','ejs');
+app.use(morgan('dev'));
 app.use(expressLayouts());
-app.use(express.urlencoded({extended:true,limit:"20mb"}));
-app.use(express.static('public'));
+app.use(express.urlencoded({extended:true}));
 
 app.get('/', (req, res) => {
   res.render('index',{
@@ -23,7 +23,7 @@ app.get('/', (req, res) => {
   });
 })
 
-app.get('/anime',(req,res) => {
+app.get('/anime',(req,res,next) => {
   const loadAnim = utils.loadAnimeList();
   return res.render('list-anime',{
     title: 'list anime',
@@ -31,6 +31,42 @@ app.get('/anime',(req,res) => {
     loadAnim
   })
 })
+
+app.post('/Anime',[
+  check('realese').custom(value => {
+    const tahun = utils.checkYear(value);
+    if (!tahun){
+      throw new Error('tahun tidak valid');
+    } 
+    return true;
+  })
+],(req,res) => {  
+    const form = new formidable.IncomingForm();
+
+    const errors = validationResult(req);
+   
+    return form.parse(req,(error,fields,files) => {
+      const oldPath = files.sampulAnim.path;
+      const newPath = '/public/uploads/' + files.sampulAnim.name;
+      if(!errors.isEmpty()){
+         res.render('add-list-anim',{
+          title: 'form tambah',
+          layout: 'layouts/main-layouts',
+          errors: errors.array(),
+        })
+        
+      }
+      else{
+        mv(oldPath ,'./public' + newPath,(Err) => {
+          if(Err) throw Err;
+          utils.addAnim(fields,newPath);  
+          res.redirect('/anime')
+        })
+      }
+    })
+})
+
+
 
 app.get('/anime/detail/:nama',(req,res) => {
   const Anim = utils.findAnime(req.params.nama);
@@ -52,43 +88,6 @@ app.get('/Anime/update',(req,res) => {
     layout: 'layouts/main-layouts',
   })
 })
-
-
-
-
-app.post('/Anime',[
-  check('realese').custom(value => {
-    const tahun = utils.checkYear(value);
-    if (!tahun){
-      throw new Error('tahun tidak valid');
-    } 
-    return true;
-  })
-],(req,res,next) => {  
-    const form = new formidable.IncomingForm();
-
-    const errors = validationResult(req);
-   
-    return form.parse(req,(error,fields,files) => {
-      const oldPath = files.sampulAnim.path;
-      const newPath = 'public/uploads/' + files.sampulAnim.name;
-      if(!errors.isEmpty()){
-        res.render('add-list-anim',{
-          title: 'form tambah',
-          layout: 'layouts/main-layouts',
-          errors: errors.array(),
-        })
-      }
-      else{
-        utils.addAnim(fields,newPath);
-        return res.redirect('/anime');
-      }
-      return mv(oldPath,newPath,(Err) => {
-        if( Err) throw Err;
-      })
-    })
-})
-
 
 
 app.use('/',(req,res) => {
